@@ -1,0 +1,94 @@
+name: Build
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+
+  pull_request:
+    branches:
+      - main
+      - develop
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build and Package (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-latest
+          - windows-latest
+          - macos-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "25"
+          cache: gradle
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      # Build JAR
+      - name: Build project
+        run: ./gradlew clean build
+
+      # Prepare build output path
+      - name: List build output
+        run: ls -R app/build/libs || dir app\build\libs
+
+      # JPACKAGE (Linux)
+      - name: Package (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          jpackage \
+            --name MyApp \
+            --input app/build/libs \
+            --main-jar app.jar \
+            --main-class org.example.App \
+            --type deb \
+            --linux-shortcut \
+            --linux-menu-group "Utility" \
+            --dest dist
+
+      # JPACKAGE (Windows)
+      - name: Package (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          jpackage `
+            --name MyApp `
+            --input app/build/libs `
+            --main-jar app.jar `
+            --main-class org.example.App `
+            --type exe `
+            --dest dist
+
+      # JPACKAGE (macOS)
+      - name: Package (macOS)
+        if: runner.os == 'macOS'
+        run: |
+          jpackage \
+            --name MyApp \
+            --input app/build/libs \
+            --main-jar app.jar \
+            --main-class org.example.App \
+            --type dmg \
+            --dest dist
+
+      # Upload installer artifacts
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: MyApp-${{ matrix.os }}
+          path: dist/*

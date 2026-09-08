@@ -1,0 +1,19 @@
+# Ignore Gradle project-specific cache directory
+.gradle
+
+# Ignore Gradle build output directory
+build
+
+# Ignore IDE Java output directory
+app/bin/
+
+# Ignore Kotlin plugin data
+.kotlin
+
+dist
+
+# Ignore employee.csv files
+# this happen when build
+app/EmployeeData.csv
+# this happen when in development
+EmployeeData.csv
