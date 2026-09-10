@@ -1,4 +1,4 @@
-package java.org.example;
+package org.example;
 
 // import static org.junit.Assert.assertFalse;
 // import static org.junit.Assert.assertTrue;
