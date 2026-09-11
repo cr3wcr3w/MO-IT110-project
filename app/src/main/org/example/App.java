@@ -1,39 +1,48 @@
 package org.example;
 
-// import java.util.List;
-// import java.util.Map;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
+import java.awt.CardLayout;
+import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import org.example.backend.config.Setting;
 import org.example.backend.db.Database;
+import org.example.frontend.routes.Dashboard;
+import org.example.frontend.routes.Home;
+import org.example.frontend.routes.RouteType;
+import org.example.frontend.routes.Router;
 
-public class App extends JFrame {
+public class App {
+  private final CardLayout cardLayout = new CardLayout();
+  private final JPanel screens = new JPanel(cardLayout);
+  private final Router router;
+  private final Setting window;
 
   public App() {
-    Setting app = new Setting();
+    this.window = new Setting();
 
     // setup the mock database
     Database.loadEmployeeData();
     Database.loadAttendanceData();
 
-    // Map<String, List<String>> employees = Database.getEmployeeData();
-    // Map<String, List<String[]>> attendance = Database.getAttendanceData();
+    this.router = new Router(screens, cardLayout);
 
-    // System.out.println("Employee Data: " + employees);
-    // for (String employeeId : attendance.keySet()) {
-    //   System.out.println("Employee: " + employeeId);
+    // register routes
+    router.register(RouteType.HOME, new Home(this));
+    router.register(RouteType.DASHBOARD, new Dashboard(this));
 
-    //   for (String[] record : attendance.get(employeeId)) {
-    //     System.out.println(
-    //         "  Date: " + record[0] + " | Time In: " + record[1] + " | Time Out: " + record[2]);
-    //   }
-    // }
+    window.setContentPane(screens);
 
-    JLabel label = new JLabel("Hello World!");
-    app.add(label);
+    // default route
+    router.navigate(RouteType.HOME);
 
-    app.setVisible(true);
+    window.setVisible(true);
+  }
+
+  public void goTo(RouteType route) {
+    router.navigate(route);
+  }
+
+  public void goHome() {
+    router.navigate(RouteType.HOME);
   }
 
   public static void main(String[] args) {
