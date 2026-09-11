@@ -14,8 +14,8 @@ import java.util.TreeMap;
 public class Database {
   private static final String EMPLOYEE_CSV_FILE_PATH = "EmployeeData.csv";
   private static final String ATTENDANCE_CSV_FILE_PATH = "AttendanceRecord.csv";
-  private static Map<String, List<String>> employeeData = new TreeMap<>();
-  private static Map<String, List<String[]>> attendanceData = new HashMap<>();
+  private static final Map<String, List<String>> employeeData = new TreeMap<>();
+  private static final Map<String, List<String[]>> attendanceData = new HashMap<>();
 
   /**
    * This method help employee csv format into [{key: [employee_number, fname, lname, birthday]}]

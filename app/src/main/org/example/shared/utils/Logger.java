@@ -43,8 +43,6 @@ public class Logger {
   public static void error(String message, Exception e, boolean showDialog) {
     System.err.println("[" + timestamp() + "] [ERROR] " + message);
 
-    e.printStackTrace();
-
     if (showDialog) {
       JOptionPane.showMessageDialog(
           null, message + "\n" + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
