@@ -41,10 +41,6 @@ public class App {
     router.navigate(route);
   }
 
-  public void goHome() {
-    router.navigate(RouteType.HOME);
-  }
-
   public static void main(String[] args) {
     SwingUtilities.invokeLater(() -> new App());
   }
